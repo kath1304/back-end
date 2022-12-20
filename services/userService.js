@@ -1,5 +1,5 @@
 import {User} from "./User.js";
-import {Database} from "./Database.js"
+import {database} from "./Database.js"
 
 class UserService {
     database;
