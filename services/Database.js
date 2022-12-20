@@ -1,4 +1,4 @@
-export class Database {
+class Database {
     mysql
     connection
     constructor() {
@@ -9,6 +9,8 @@ export class Database {
             password: 'tirocinio_2022_2023',
         });
     }
+    //METODO PER COMUNICARE CON IL DATABASE SENZA SPECIFICA
+    //IN QUERY SPECIFICARE LA PARTICOLARE RICHIESTA
     request (query) {
         let answer
         let error
@@ -20,4 +22,6 @@ export class Database {
         return error
     }
 }
+
+export const database= new Database();
 
