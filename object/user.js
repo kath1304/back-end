@@ -1,6 +1,6 @@
 import express from "express";
 
-Class User()
+export class User
 
 {
     _username;
@@ -70,5 +70,5 @@ Class User()
 
 }
 
-export {user};
+
 

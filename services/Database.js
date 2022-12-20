@@ -1,4 +1,4 @@
-class Database {
+export class Database {
     mysql
     connection
     constructor() {
@@ -20,4 +20,5 @@ class Database {
         return error
     }
 }
-export default new Database();
+
+
