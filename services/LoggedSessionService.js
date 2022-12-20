@@ -7,6 +7,9 @@ class LoggedSessionService {
     constructor(){
         this.database = new Database()
     }
+    get (loggedSession){
+        let result = this.database.query("stringa")
 
+    }
 }
 

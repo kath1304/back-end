@@ -9,7 +9,7 @@ export class Database {
             password: 'tirocinio_2022_2023',
         });
     }
-    query = (query) => {
+    request (query) {
         let answer
         let error
         this.connection.query(query, (err, results, fields) => {
