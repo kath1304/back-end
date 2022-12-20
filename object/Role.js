@@ -1,4 +1,3 @@
-
 class Role{
     constructor(name, description, label) {
         this._name= name;
