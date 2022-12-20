@@ -9,7 +9,7 @@ class UserService
     constructor()
     {
         this.database = new Database();
-        this.user= new User();
+
     }
 
 
