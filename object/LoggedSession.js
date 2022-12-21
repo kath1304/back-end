@@ -26,8 +26,10 @@ class LoggedSession {
         console.log(result)
     }
     async save(){
-        let result = await database.request('INSERT INTO logged_session SET ?', this)
-        console.log(result)
+        try {
+            let result = await database.request('INSERT INTO logged_session SET ?', this)
+            console.log(result)
+        } catch(error) {console.log(error)}
     }
     async delete(){
         let result = await database.request('DELETE FROM `logged_session` WHERE `ip_address` = this.ip_address')
