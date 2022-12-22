@@ -1,17 +1,17 @@
-import {database} from "../services/Database";
+import {database} from "../services/Database.js";
 
 export class User {
-    _username;
-    _name;
-    _surname;
-    _email;
+    username;
+    firstname;
+    lastname;
+    email;
 
 
     constructor(username, name, surname, email) {
-        this._username = username;
-        this._name = name;
-        this._surname = surname;
-        this._email = email;
+        this.username = username;
+        this.firstname = name;
+        this.lastname = surname;
+        this.email = email;
 
 
     }
@@ -20,40 +20,40 @@ export class User {
 
     //USERNAME
     get username() {
-        return this._username;
+        return this.username;
     }
 
     set username(username) {
-        this._username = name;
+        this.username = username;
     }
 
     //NAME
-    get name() {
-        return this._name;
+    get firstname() {
+        return this.firstname;
     }
 
-    set name(name) {
-        this._name = name;
+    set firstname(name) {
+        this.firstname = name;
     }
 
     //SURNAME
 
-    get surname() {
-        return this._surname;
+    get lastname() {
+        return this.lastname;
     }
 
-    set surname(surname) {
-        this._surname = surname;
+    set lastname(surname) {
+        this.lastname= surname;
     }
 
     //EMAIL
 
     get email() {
-        return this._email;
+        return this.email;
     }
 
     set email(email) {
-        this._email = email;
+        this.email = email;
     }
 
     //READ METHOD BY USERNAME --> RETURN COMPLETE USER OBJ
@@ -66,10 +66,10 @@ export class User {
         } catch (error) {
             console.error(error)
         }
-
+        return result;
     }
 
-    //SAVE METHOD  --> PUT THE NEW USER INTO THE DB
+    //SAVE METHOD  --> PUT THE NEW USER INTO THE DB AND RETURN THE OBJ
     async save() {
         let result
         try {
@@ -78,6 +78,7 @@ export class User {
         } catch (error) {
             console.error(error)
         }
+        return result;
     }
 
     //DELETE METHOD BY USERNAME --> RETURN THE USER OBJ DELETED
@@ -89,9 +90,10 @@ export class User {
         } catch (error) {
             console.log(error)
         }
+        return result;
     }
 
-    //UPDATE METHOD BY USER --> UPLOAD THE REFRESH USER INTO THE DB
+    //UPDATE METHOD BY USER --> UPLOAD THE REFRESH USER INTO THE DB AND RETURN THE UPLOADED USER OBJ
     //OSS: CASCADE
     async upDateByUserName(user) {
         let result
@@ -101,6 +103,7 @@ export class User {
         } catch (error) {
             console.error(error);
         }
+        return result;
     }
 
 
