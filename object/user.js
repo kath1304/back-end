@@ -57,11 +57,12 @@ export class User {
     }
 
     //READ METHOD BY USERNAME --> RETURN COMPLETE USER OBJ
-    async getByUsername(nickname) {
+    async getByUsername(username ) {
+        this.username = username;
         let result
 
         try {
-            result = await database.request('SELECT * FROM `user` WHERE `username`=nickname');
+            result = await database.request('SELECT * FROM `user` WHERE `username`=username');
             console.log(result);
         } catch (error) {
             console.error(error)
@@ -82,10 +83,11 @@ export class User {
     }
 
     //DELETE METHOD BY USERNAME --> RETURN THE USER OBJ DELETED
-    async deleteByUserName(nickname) {
+    async deleteByUserName(username) {
+        this.username=username
         let result
         try {
-            result = await database.request('DELETE FROM user WHERE `username`=nickname');
+            result = await database.request('DELETE FROM user WHERE `username`=username');
             console.log(result);
         } catch (error) {
             console.log(error)
@@ -98,7 +100,7 @@ export class User {
     async upDateByUserName(user) {
         let result
         try {
-            result = await database.request('UPDATE user SET ? WHERE `username`=this.username', user);
+            result = await database.request('UPDATE user SET ? WHERE `username`=user.username', user);
             console.log(result);
         } catch (error) {
             console.error(error);
