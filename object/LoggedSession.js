@@ -18,32 +18,57 @@ class LoggedSession {
     set accessDate(date) {this.access_date = date}
 
     async getByIp(ip) {
-        let result = await database.request('SELECT * FROM `logged_session` WHERE `ip_address` = ip')
+        let result
+        try {
+            result = await database.request('SELECT * FROM `logged_session` WHERE `ip_address` = ip')
+        } catch(e) {
+            console.error(e)
+        }
         console.log(result)
+        return result
     }
     async getByUsername(username) {
-        let result = database.request('SELECT * FROM `logged_session` WHERE `user_username` = ip')
+        let result
+        try {
+            result = database.request('SELECT * FROM `logged_session` WHERE `user_username` = username')
+        } catch(e) {
+            console.error(e)
+        }
         console.log(result)
+        return result
     }
     async save(){
+        let result
         try {
-            let result = await database.request('INSERT INTO logged_session SET ?', this)
-            console.log(result)
-        } catch(error) {console.log(error)}
-    }
-    async delete(){
-        let result = await database.request('DELETE FROM `logged_session` WHERE `ip_address` = this.ip_address')
+            result = await database.request('INSERT INTO logged_session SET ?', this)
+        } catch(e) {console.error(e)}
         console.log(result)
+        return result
+    }
+    async delete() {
+        let result
+        try {
+            result = await database.request('DELETE FROM `logged_session` WHERE `ip_address` = this.ip_address')
+        } catch (e) {
+            console.error(e)
+        }
+        console.log(result)
+        return result
     }
     async deleteByUsername(username){
-        let result = await database.request('DELETE FROM `logged_session` WHERE `username` = username')
+        let result
+        try {
+            result = await database.request('DELETE FROM `logged_session` WHERE `username` = username')
+        } catch(e) {
+            console.error(e)
+        }
         console.log(result)
+        return result
     }
     async deleteByIp(ip){
         let result = await database.request('DELETE FROM `logged_session` WHERE `ip_address` = ip')
         console.log(result)
     }
-    //specificare il cascade all in phpstorm
     async update(loggedSession){
         let result
         try {
