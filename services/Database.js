@@ -11,15 +11,23 @@ class Database {
     }
     //METODO PER COMUNICARE CON IL DATABASE SENZA SPECIFICA
     //IN QUERY SPECIFICARE LA PARTICOLARE RICHIESTA
-    request (query) {
+    request (query, object) {
         let answer
-        let error
+        if(object) {
+            this.connection.query(query, [object], (err, results, fields) => {
+                if (err) throw err
+                answer = results
+            })
+            return answer
+        }
         this.connection.query(query, (err, results, fields) => {
+            if (err) throw err
             answer = results
-            error = err
         })
-        if(answer) return answer
-        return error
+        return answer
+    }
+    endConnection(){
+        this.connection.end()
     }
 }
 
