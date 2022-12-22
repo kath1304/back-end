@@ -1,8 +1,9 @@
+import mysql from "mysql2";
 class Database {
     mysql
     connection
     constructor() {
-        this.mysql = require('mysql2');
+        this.mysql = mysql;
         this.connection = this.mysql.createConnection({
             host: 'localhost',
             user: 'root',
