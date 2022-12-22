@@ -1,36 +1,43 @@
 import mysql from "mysql2";
+
 class Database {
     mysql
     connection
+
     constructor() {
         this.mysql = mysql;
         this.connection = this.mysql.createConnection({
             host: 'localhost',
             user: 'root',
             password: 'tirocinio_2022_2023',
+            database: 'tirociniodevel'
         });
     }
+
     //METODO PER COMUNICARE CON IL DATABASE SENZA SPECIFICA
     //IN QUERY SPECIFICARE LA PARTICOLARE RICHIESTA
-    request (query, object) {
+    request(query, object) {
         let answer
-        if(object) {
-            this.connection.query(query, [object], (err, results, fields) => {
-                if (err) throw err
-                answer = results
-            })
-            return answer
+        if (object) {
+            return new Promise((resolve, reject) => {
+                this.connection.query(query, [object], (err, result, fields) => {
+                    if (err) reject(err)
+                    resolve(result)
+                })
+            });
         }
-        this.connection.query(query, (err, results, fields) => {
-            if (err) throw err
-            answer = results
+        return new Promise((resolve, reject) => {
+            this.connection.query(query, (err, result, fields) => {
+                if (err) reject(err)
+                resolve(result)
+            })
         })
-        return answer
     }
-    endConnection(){
+
+    endConnection() {
         this.connection.end()
     }
 }
 
-export const database= new Database();
+export const database = new Database();
 
