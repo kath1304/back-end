@@ -45,8 +45,15 @@ class LoggedSession {
     }
     //specificare il cascade all in phpstorm
     async update(loggedSession){
-        let result = await database.request('UPDATE `logged_session` SET ? WHERE `ip_address` = this.ip_address', loggedSession)
+        let result
+        try {
+            result = await database.request('UPDATE `logged_session` SET ? WHERE `ip_address` = this.ip_address', loggedSession)
+        }
+        catch (e) {
+            console.error(e)
+        }
         console.log(result)
+        return result
     }
 }
 
