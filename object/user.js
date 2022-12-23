@@ -103,6 +103,7 @@ export class User {
             console.log(result);
         } catch (error) {
             console.error(error);
+
         }
         return result;
     }

@@ -33,6 +33,7 @@ class Database {
 
     endConnection() {
         this.connection.end()
+
     }
 }
 
