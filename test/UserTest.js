@@ -1,4 +1,5 @@
 import {User} from "../object/User.js";
+import {database} from "../services/Database.js";
 
 
 //CREATE USER
@@ -48,12 +49,13 @@ const testSave4 = () => {
 }
 
 //READ METHOD TEST-->idk if it's correct
-const testRead = () => {
+const testRead = async () => {
     let result;
-    result = user.getByUsername('kath')
-    if (result === user) {
+    result = await user.getByUsername('kath')
+    if (result.username === user.username) {
         console.log('kath user is in the db,you can read it')
         console.log(user)
+        return
     }
     console.error('kath user is not in the db')
 }
@@ -76,13 +78,23 @@ const testDelete = () => {
     console.error('not fount or not deleted')
 }
 
-//testSave()
-//testSave2()
-//testSave3()
-//testSave4()
-//testRead()
-//testUpDate()
-//testDelete()
+const main = async () => {
+    await database.init()
+    //testSave()
+    //testSave2()
+    //testSave3()
+    //testSave4()
+    await testRead()
+    //testUpDate()
+    //testDelete()
+}
+
+main().catch(e => {
+    database.endConnection()
+    console.error(e)
+    process.exit(1)
+})
+
 
 
 
