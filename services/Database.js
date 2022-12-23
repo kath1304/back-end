@@ -26,6 +26,7 @@ class Database {
         }
         else {
             [result] = await this.connection.query(query)
+
         }
 
         return result
