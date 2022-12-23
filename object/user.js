@@ -57,18 +57,17 @@ export class User {
     }
 
     //READ METHOD BY USERNAME --> RETURN COMPLETE USER OBJ
-    async getByUsername(username) {
+    async getByUsername(username ) {
         this.username = username;
         let result
-        let newUser
 
         try {
-            result = await database.request('SELECT * FROM `user` WHERE `username`=?', username);
-            newUser = new User(result[0].username, result[0].firstname, result[0].lastname, result[0].email)
+            result = await database.request('SELECT * FROM `user` WHERE `username`=username');
+            console.log(result);
         } catch (error) {
             console.error(error)
         }
-        return newUser;
+        return result;
     }
 
     //SAVE METHOD  --> PUT THE NEW USER INTO THE DB AND RETURN THE OBJ
