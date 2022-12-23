@@ -89,7 +89,7 @@ const main = async () => {
 //testDelete()
 }
 
-main.catch(e => {
+main().catch(e => {
     database.endConnection();
     console.error(e);
     process.exit(1)
