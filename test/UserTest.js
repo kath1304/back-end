@@ -15,18 +15,13 @@ user3 = new User('tommy', 'tom', 'hollan', 'tom.holland@gmail.com');
 user4 = new User('madame', 'marie', 'rose', 'marie.rose@gmail.com');
 
 
-//CREATE A RESULT CONSTRUCTOR
-
-
 //SAVE METHOD TEST
 const testSave = () => {
     let result;
     result = user.save()
-    if (result === user) {
+    if (result === user)
         console.log('kath user uploaded')
-    } else {
-        console.error('kath user upload fail')
-    }
+    console.error('kath user upload fail')
 }
 
 const testSave2 = () => {
@@ -84,10 +79,10 @@ const testDelete = () => {
 }
 
 const main = async () => {
-    //await.database.init()
-    //testSave()
-//testSave2()
-//testSave3()
+    await database.init()
+    // testSave()
+    // testSave2()
+    //testSave3()
 //testSave4()
     await testRead()
 //testUpDate()
