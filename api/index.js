@@ -1,5 +1,7 @@
 import express from 'express'
 import users from './routes/users.js'
+import loggedSessions from "./routes/loggedSessions.js";
+import roles from "./routes/roles.js";
 import {database} from "../services/Database.js";
 import bodyParser from "body-parser";
 class index {
@@ -23,6 +25,8 @@ class index {
         })
 
         this.app.use('/users', users)
+        this.app.use('/loggedSessions', loggedSessions)
+        this.app.use('/roles', roles)
     }
 }
 

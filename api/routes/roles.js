@@ -8,7 +8,7 @@ let role1 = new Role('user1', 'userWithStandardPrivileges', 'redLabel');
 
 /*GET:cerca l'elemento con valore name, se non lo trova restituisce 404 not found*/
 roles.get('/:name?',async (req, res, _next) => {
-    if(!req.params.name) return res.send(role1.getAll()); //se non viene passato un nome, restituisco l'intero array
+    if(!req.params.name) return  res.send(await role1.getAll()); //se non viene passato un nome, restituisco l'intero array
     let result= new Role();
     await result.getByName(req.params.name)
     if (result.name)

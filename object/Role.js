@@ -36,7 +36,7 @@ export class Role {
         let result;
 
         try {
-            result = await database.request("SELECT * FROM role ");
+            result = await database.request('SELECT * FROM role ');
             for(let i=0; i<result.length; i++){
                 arrayResult.push(new Role(result[i].name, result[i].description, result[i].label));
             }
