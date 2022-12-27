@@ -1,5 +1,8 @@
-import express from "express"
 import {database} from "../services/Database.js"
+
+const datetimeToString = datetime => {
+    return datetime.toISOString().substring(0, 10) + ' ' + datetime.toLocaleTimeString()
+}
 
 class LoggedSession {
     ip_address
@@ -19,67 +22,99 @@ class LoggedSession {
 
     async getByIp(ip) {
         let result
+
+        //se la query ha un risultato ritorno un nuovo oggetto con i campi del risultato altrimenti ritorno null
         try {
-            result = await database.request('SELECT * FROM `logged_session` WHERE `ip_address` = ip')
+            result = await database.request('SELECT * FROM logged_session WHERE ip_address = ?', ip)
+            //console.log(result)
+            if(result.length) return new LoggedSession(result[0].ip_address, result[0].user_username, datetimeToString(result[0].access_date))
+            else return null
         } catch(e) {
             console.error(e)
         }
-        console.log(result)
-        return result
     }
+
     async getByUsername(username) {
         let result
+
+        //se la query ha un risultato ritorno un nuovo oggetto con i campi del risultato altrimenti ritorno null
         try {
-            result = database.request('SELECT * FROM `logged_session` WHERE `user_username` = username')
+            result = await database.request('SELECT * FROM logged_session WHERE user_username = ?', username)
+            //console.log(result)
+            if(result.length) return new LoggedSession(result[0].ip_address, result[0].user_username, datetimeToString(result[0].access_date))
+            else return null
         } catch(e) {
             console.error(e)
         }
-        console.log(result)
-        return result
     }
+
     async save(){
         let result
         try {
             result = await database.request('INSERT INTO logged_session SET ?', this)
+            //console.log(result)
         } catch(e) {console.error(e)}
-        console.log(result)
         return result
     }
+
     async delete() {
         let result
         try {
-            result = await database.request('DELETE FROM `logged_session` WHERE `ip_address` = this.ip_address')
+            result = await database.request('DELETE FROM logged_session WHERE ip_address = ?', this.ip_address)
+            //console.log(result)
         } catch (e) {
             console.error(e)
         }
-        console.log(result)
         return result
     }
+
     async deleteByUsername(username){
         let result
         try {
-            result = await database.request('DELETE FROM `logged_session` WHERE `username` = username')
+            result = await database.request('DELETE FROM logged_session WHERE username = ?', username)
+            //console.log(result)
         } catch(e) {
             console.error(e)
         }
-        console.log(result)
         return result
     }
+
     async deleteByIp(ip){
-        let result = await database.request('DELETE FROM `logged_session` WHERE `ip_address` = ip')
-        console.log(result)
-    }
-    async update(loggedSession){
         let result
         try {
-            result = await database.request('UPDATE `logged_session` SET ? WHERE `ip_address` = this.ip_address', loggedSession)
+            result = await database.request('DELETE FROM logged_session WHERE ip_address = ?', ip)
+            //console.log(result)
+        } catch(e) {
+            console.error(e)
+        }
+        return result
+    }
+
+    async updateIp(newIp, oldIp){
+        let result
+        try {
+            result = await database.request('UPDATE logged_session SET ip_address = ? WHERE ip_address = ?', newIp, oldIp)
+            //console.log(result)
         }
         catch (e) {
             console.error(e)
         }
-        console.log(result)
         return result
     }
+
+    /*
+    //da modificare
+    async update(loggedSession){
+        let result
+        try {
+            result = await database.request('UPDATE logged_session SET ? WHERE ip_address = ?', loggedSession, this.ip_address)
+            console.log(result)
+        }
+        catch (e) {
+            console.error(e)
+        }
+        return result
+    } */
 }
 
 export {LoggedSession}
