@@ -23,8 +23,7 @@ class Database {
         let result
         if ([...objects].length) {
             [result] = await this.connection.query(query, [...objects])
-        }
-        else {
+        } else {
             [result] = await this.connection.query(query)
         }
 

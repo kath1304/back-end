@@ -1,5 +1,5 @@
 import {LoggedSession} from "../object/LoggedSession.js"
-import {User} from "../object/user.js"
+import {User} from "../object/User.js"
 import {database} from "../services/Database.js"
 
 //funzione per comparare due oggetti che abbiano le chiavi nello stesso ordine con JSON.stringify

@@ -1,5 +1,7 @@
 import express from 'express'
 import users from './routes/users.js'
+import {database} from "../services/Database.js";
+import bodyParser from "body-parser";
 class index {
     app
     port
@@ -8,7 +10,9 @@ class index {
         this.port = 3000
     }
 
-    init() {
+    async init() {
+        await database.init()
+        this.app.use(bodyParser.json({limit: '50mb'}))
 
         this.app.listen(this.port, () => {
             console.log('Server in ascolto su ' + this.port)
@@ -23,4 +27,4 @@ class index {
 }
 
 let newIndex = new index()
-newIndex.init()
+await newIndex.init()
