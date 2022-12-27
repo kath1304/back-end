@@ -24,8 +24,7 @@ router.post('/', async (req, res) => {
 
 router.delete('/:ip', async (req, res) => {
     await loggedSession.deleteByIp(req.params.ip)
-    if(await loggedSession.getByIp(req.params.ip)) res.send('rimosso elemento con ip ' + req.params.ip)
-    else res.send('errore')
+    res.send('rimosso elemento con ip ' + req.params.ip)
 })
 
 router.put('/:ip', async (req, res) => {
