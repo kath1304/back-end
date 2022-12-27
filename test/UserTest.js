@@ -16,35 +16,43 @@ user4 = new User('madame', 'marie', 'rose', 'marie.rose@gmail.com');
 
 
 //SAVE METHOD TEST
-const testSave = () => {
+const testSave = async () => {
     let result;
-    result = user.save()
-    if (result === user)
+    result = await user.save()
+    if (result.affectedRows === 1) {
         console.log('kath user uploaded')
+        return
+    }
     console.error('kath user upload fail')
 }
 
-const testSave2 = () => {
+const testSave2 = async () => {
     let result;
-    result = user2.save()
-    if (result === user2)
+    result = await user2.save()
+    if (result.affectedRows === 1) {
         console.log('james user uploaded')
+        return
+    }
     console.error('james user upload fail')
 }
 
-const testSave3 = () => {
+const testSave3 = async () => {
     let result;
-    result = user1.save()
-    if (result === user1)
+    result = await user1.save()
+    if (result.affectedRows === 1) {
         console.log('jessy user uploaded')
+        return
+    }
     console.error('jessy user upload fail')
 }
 
-const testSave4 = () => {
+const testSave4 = async () => {
     let result;
-    result = user3.save()
-    if (result === user3)
+    result = await user3.save()
+    if (result.affectedRows === 1) {
         console.log('tom user uploaded')
+        return
+    }
     console.error('tom user upload fail')
 }
 
@@ -61,33 +69,46 @@ const testRead = async () => {
 }
 
 //UPDATE METHOD TEST
-const testUpDate = () => {
+const testUpDate = async () => {
     let result;
-    result = user.upDateByUserName(user4)
-    if (result === user1)
+    result = await user.upDateByUserName(user4)
+    if (result.affectedRows === 1) {
         console.log('kath user replaced with madame one')
+        return
+    }
     console.error('fail')
 }
 
 //DELETE TEST METHOD-->delete all
-const testDelete = () => {
+const testDeleteUser = async () => {
     let result;
-    result = user1.deleteByUserName('jessy')
-    if (result === user1)
+    result = await user1.deleteByUserName('jessy')
+    if (result.affectedRows === 1) {
         console.log('jessy user deleted')
+        return
+    }
+    console.error('not fount or not deleted')
+}
+
+//DELETE TEST METHOD-->delete a user
+const testDelete = async () => {
+    let result;
+    result = await user1.delete()
+    if (result.affectedRows === 4)
+        console.log('database clean')
     console.error('not fount or not deleted')
 }
 
 const main = async () => {
     await database.init()
-    // testSave()
-    // testSave2()
-    //testSave3()
-//testSave4()
+    await testSave()
+    await testSave2()
+    await testSave3()
+    await testSave4()
     await testRead()
-
-//testUpDate()
-//testDelete()
+    await testDelete()
+    await testUpDate()
+    await testDeleteUser()
 }
 
 main().catch(e => {

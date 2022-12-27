@@ -43,7 +43,7 @@ export class User {
     }
 
     set lastname(surname) {
-        this.lastname= surname;
+        this.lastname = surname;
     }
 
     //EMAIL
@@ -63,14 +63,33 @@ export class User {
         try {
             result = await database.request('SELECT * FROM `user` WHERE `username`=?', username);
             newUser = new User(result[0].username, result[0].firstname, result[0].lastname, result[0].email)
+            this.username = result[0].username
+            this.firstname = result[0].firstname
+            this.lastname = result[0].lastname
+            this.email = result[0].email
             console.log(result);
         } catch (error) {
             console.error(error)
         }
-        return newUser;
+        return this;
     }
 
-    //SAVE METHOD  --> PUT THE NEW USER INTO THE DB AND RETURN THE OBJ
+    async getAll() {
+        let result
+        let arrayResult = []
+        try {
+            result = await database.request('SELECT * FROM user')
+            for (let i = 0; i < result.length; i++) {
+                arrayResult.push(new User(result[i].username, result[i].firstname, result[i].lastname, result[i].email))
+            }
+        } catch (error) {
+            console.error(error)
+        }
+
+        return arrayResult;
+    }
+
+    //SAVE METHOD  --> PUT THE NEW USER INTO THE DB AND RETURN SET_HEADER
     async save() {
         let result
         try {
@@ -82,7 +101,7 @@ export class User {
         return result;
     }
 
-    //DELETE METHOD BY USERNAME --> RETURN THE USER OBJ DELETED
+    //DELETE METHOD BY USERNAME --> RETURN SET_HEADER
     async deleteByUserName(username) {
         let result
         try {
@@ -94,12 +113,26 @@ export class User {
         return result;
     }
 
-    //UPDATE METHOD BY USER --> UPLOAD THE REFRESH USER INTO THE DB AND RETURN THE UPLOADED USER OBJ
-    //OSS: CASCADE
-    async upDateByUserName(user) {
+
+//DELETE ALL METHOD AND RETURN SET_HEADER
+    async delete() {
         let result
         try {
-            result = await database.request('UPDATE user SET ? WHERE `username`=user.username', user);
+            result = await database.request('DELETE FROM user');
+            console.log(result);
+        } catch (error) {
+            console.log(error)
+        }
+        return result;
+    }
+
+
+    //UPDATE METHOD BY USER --> UPLOAD THE REFRESH USER INTO THE DB AND RETURN THE UPLOADED USER OBJ
+    //OSS: CASCADE
+    async upDateByUserName(oldUsername) {
+        let result
+        try {
+            result = await database.request('UPDATE user SET ? WHERE `username`= ?', this, oldUsername);
             console.log(result);
         } catch (error) {
             console.error(error);
