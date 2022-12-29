@@ -33,7 +33,7 @@ roles.post('/', async (req, res, next) => {
     const requiredFieldsRole = ['name', 'description', 'label']
     const missingFieldsRole = []
     requiredFieldsRole.forEach((field) => {
-        if (req.body[field] === undefined) missingFields.push(field)
+        if (req.body[field] === undefined) missingFieldsRole.push(field)
     })
     /*se ci sono dei campi mancanti, restituisci un errore*/
     if (missingFieldsRole.length) {
