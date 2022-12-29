@@ -4,45 +4,54 @@ export class Role {
     name
     description
     label
+
     constructor(name, description, label) {
         this.name = name;
         this.description = description;
         this.label = label;
     }
 
-    get name() { return this.name;}
-    set name(value) { this.name = value;}
-    get description() { return this.description;}
-    set description(value) { this.description = value;}
-    get label() { return this.label;}
-    set label(value) { this.label = value;}
-
-    async getByName(name) {
-        let result;
-        let newRole;
-        try {
-            result = await database.request('SELECT * FROM `role` WHERE `name` = ?', name);
-            newRole = new Role(result[0].name, result[0].description, result[0].label)
-            this.name=result[0].name; this.description=result[0].description; this.label=result[0].label;
-            console.log(result);
-        } catch (e) {
-            console.error(e);
-            return null
-        }
-        return this
+    get name() {
+        return this.name;
     }
 
-    async getAll() {
-        let arrayResult= [];
-        let result;
+    set name(value) {
+        this.name = value;
+    }
 
-        try {
-            result = await database.request('SELECT * FROM role ');
-            for(let i=0; i<result.length; i++){
-                arrayResult.push(new Role(result[i].name, result[i].description, result[i].label));
-            }
-        } catch (e) {
-            console.error(e);
+    get description() {
+        return this.description;
+    }
+
+    set description(value) {
+        this.description = value;
+    }
+
+    get label() {
+        return this.label;
+    }
+
+    set label(value) {
+        this.label = value;
+    }
+
+    static async getByName(name) {
+        let result;
+        let newRole;
+        result = await database.request('SELECT * FROM `role` WHERE `name` = ?', name);
+        if(result.length)
+            newRole = new Role(result[0].name, result[0].description, result[0].label)
+        else
+            return null;
+        return newRole;
+    }
+
+    static async getAll() {
+        let arrayResult = [];
+        let result;
+        result = await database.request('SELECT * FROM role ');
+        for (let i = 0; i < result.length; i++) {
+            arrayResult.push(new Role(result[i].name, result[i].description, result[i].label));
         }
         console.log(result)
         return arrayResult;
@@ -50,35 +59,22 @@ export class Role {
 
     async save() {
         let result;
-        try {
-            result = await database.request('INSERT INTO role SET ?', this);
-            console.log(result)
-        } catch (e) {
-            console.error(e);
-        }
+        result = await database.request('INSERT INTO role SET ?', this);
+        console.log(result)
         return result
     }
 
-    async deleteByName(name) {
+    static async deleteByName(name) {
         let result;
-        try {
-            result = await database.request('DELETE FROM role WHERE `name`=? ', name);
-            console.log(result)
-        } catch (e) {
-            console.error(e);
-        }
-
+        result = await database.request('DELETE FROM role WHERE `name`=? ', name);
+        console.log(result)
         return result
     }
 
-    async deleteAll() {
+    static async deleteAll() {
         let result;
-        try {
-            result = await database.request('DELETE FROM role');
-            console.log(result)
-        } catch (e) {
-            console.error(e);
-        }
+        result = await database.request('DELETE FROM role');
+        console.log(result)
         return result
     }
 
