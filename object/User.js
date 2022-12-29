@@ -16,7 +16,7 @@ export class User {
 
     }
 
-    //GETTER AND SETTER
+    /*GETTER AND SETTER*/
 
     //USERNAME
     get username() {
@@ -56,30 +56,29 @@ export class User {
         this.email = email;
     }
 
+    /* METHODS*/
+
     //READ METHOD BY USERNAME --> RETURN COMPLETE USER OBJ
     static async getByUsername(username) {
         let result
         let newUser
-        try {
-            result = await database.request('SELECT * FROM `user` WHERE `username`=?', username);
+        result = await database.request('SELECT * FROM `user` WHERE `username`=?', username);
+        if(result.length)
             newUser = new User(result[0].username, result[0].firstname, result[0].lastname, result[0].email)
-            console.log(result);
-        } catch (error) {
-            console.error(error)
-        }
+        else
+            return null;
         return newUser;
+
     }
 
+    //READ ALL METHOD --> RETURN ALL OBJS IN THE DB
     static async getAll() {
         let result
         let arrayResult = []
-        try {
-            result = await database.request('SELECT * FROM user')
-            for (let i = 0; i < result.length; i++) {
-                arrayResult.push(new User(result[i].username, result[i].firstname, result[i].lastname, result[i].email))
-            }
-        } catch (error) {
-            console.error(error)
+        result = await database.request('SELECT * FROM user')
+
+        for (let i = 0; i < result.length; i++) {
+            arrayResult.push(new User(result[i].username, result[i].firstname, result[i].lastname, result[i].email))
         }
 
         return arrayResult;
@@ -88,52 +87,32 @@ export class User {
     //SAVE METHOD  --> PUT THE NEW USER INTO THE DB AND RETURN SET_HEADER
     async save() {
         let result
-        try {
-            result = await database.request('INSERT INTO user SET ?', this);
-            console.log(result);
-        } catch (error) {
-            console.error(error)
-        }
+        result = await database.request('INSERT INTO user SET ?', this);
+
         return result;
     }
 
     //DELETE METHOD BY USERNAME --> RETURN SET_HEADER
     static async deleteByUserName(username) {
         let result
-        try {
-            result = await database.request('DELETE FROM user WHERE `username`=?', username);
-            console.log(result);
-        } catch (error) {
-            console.log(error)
-        }
+        result = await database.request('DELETE FROM user WHERE `username`=?', username);
+
         return result;
     }
 
-
-//DELETE ALL METHOD AND RETURN SET_HEADER
+    //DELETE ALL METHOD AND RETURN SET_HEADER
     static async delete() {
         let result
-        try {
-            result = await database.request('DELETE FROM user');
-            console.log(result);
-        } catch (error) {
-            console.log(error)
-        }
+        result = await database.request('DELETE FROM user');
+
         return result;
     }
 
-
     //UPDATE METHOD BY USER --> UPLOAD THE REFRESH USER INTO THE DB AND RETURN THE UPLOADED USER OBJ
-    //OSS: CASCADE
     async upDateByUserName(oldUsername) {
         let result
-        try {
-            result = await database.request('UPDATE user SET ? WHERE `username`= ?', this, oldUsername);
-            console.log(result);
-        } catch (error) {
-            console.error(error);
+        result = await database.request('UPDATE user SET ? WHERE `username`= ?', this, oldUsername);
 
-        }
         return result;
     }
 
