@@ -7,13 +7,15 @@ const roles = express.Router();
 let role1 = new Role('user1', 'userWithStandardPrivileges', 'redLabel');
 
 /*GET:cerca l'elemento con valore name, se non lo trova restituisce 404 not found*/
-roles.get('/:name?',async (req, res, _next) => {
+roles.get('/:name?',async (req, res, next) => {
     if(!req.params.name) return  res.send(await role1.getAll()); //se non viene passato un nome, restituisco l'intero array
     let result= new Role();
     await result.getByName(req.params.name)
-    if (result.name)
-        return res.send(result);
-    return res.status(404).send('elemento non trovato');
+    if (result)
+        return res.send(result)
+    const error = new Error('Resource not found')
+    error.status = 404
+    return next(error)
 })
 
 /*POST:prende un parametro e l'aggiunge all'array creato*/

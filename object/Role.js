@@ -27,8 +27,9 @@ export class Role {
             console.log(result);
         } catch (e) {
             console.error(e);
+            return null
         }
-        return this;
+        return this
     }
 
     async getAll() {
