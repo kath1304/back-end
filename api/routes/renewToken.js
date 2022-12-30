@@ -5,14 +5,14 @@ const renewToken = express.Router()
 let webToken = new WebToken()
 
 renewToken.get('/newToken', (req, res, next) => {
-    let token = req.headers["authorization"]
+    let token = req.headers["authorization"].split(" ")[1]
     let data = webToken.validate(token)
     if(data) {
-        res.header('Authorization', webToken.generate(data.username))
-        return res.send()
+        let newToken = webToken.generate(data.username)
+        return res.json(newToken)
     }
     const error = new Error("Token not valid")
-    //aggiungere status dell'errore
+    error.status = 403
     return next(error)
 })
 

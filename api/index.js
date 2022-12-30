@@ -9,8 +9,7 @@ import renewToken from "./routes/renewToken.js"
 import login from "./routes/login.js"
 
 const authorize = (req, res, next) => {
-    const token = req.headers.authorization
-
+    const token = req.headers["authorization"].split(" ")[1]
     if(token) {
         const newToken = new WebToken()
         if(newToken.validate(token)) {

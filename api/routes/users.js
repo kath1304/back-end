@@ -75,8 +75,8 @@ router.post('/', async (req, res, next) => {
         error.status = 409
         return next(error)
     }
-    //qui inserire funzione che fa hash di password e salt
-    const user = new User(req.body.username, req.body.firstname, req.body.lastname, req.body.email, //password hashata, salt);
+    let values = User.hashPassword(req.body.password)
+    const user = new User(req.body.username, req.body.firstname, req.body.lastname, req.body.email, values.hashedPassword, values.salt);
     try {
         await user.save()
     } catch (e) {
@@ -95,22 +95,17 @@ router.put('/:user', async (req, res, next) => {
         error.status = 404
         return next(error)
     }
+    if(req.body.password) {
+        let values = Users.hashPassword(req.body.password)
+        req.body.password = values.hashedPassword
+        req.body.salt = values.salt
+    }
     //if in the new obj there's undefined fields, these will be equal to old ones
     const fieldsToUpdateUser = ['username', 'firstname', 'lastname', 'email', 'password', 'salt']
     fieldsToUpdateUser.forEach((field) => {
         if (req.body[field] === undefined)
             req.body[field] = oldUser[field]
     })
-    //if che controlla se c'è o meno la password nel body
-    //DA METTERE SOPRA
-    /*
-    let user
-    if(req.body.password) {
-        //hash di password con nuovo salt
-        req.body.password = passwordHash
-        req.body.salt = saltGenerato
-    }
-     */
     let user;
     user = new User(req.body.username, req.body.firstname, req.body.lastname, req.body.email, req.body.password, req.body.salt);
     try {
