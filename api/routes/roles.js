@@ -28,9 +28,9 @@ roles.get('/', async (req, res, next) => {
     }
 })
 
-/*POST:prende l'oggetto costruito con i parametri(tutti i campi sono obbligatori) del body e l'aggiunge al db*/
+/*POST:prende l'oggetto costruito con i parametri(tutti i campi tranne decription sono obbligatori) del body e l'aggiunge al db*/
 roles.post('/', async (req, res, next) => {
-    const requiredFieldsRole = ['name', 'description', 'label']
+    const requiredFieldsRole = ['name', 'label']
     const missingFieldsRole = []
     requiredFieldsRole.forEach((field) => {
         if (req.body[field] === undefined) missingFieldsRole.push(field)
