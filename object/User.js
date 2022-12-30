@@ -5,15 +5,17 @@ export class User {
     firstname;
     lastname;
     email;
+    password;
+    salt;
 
 
-    constructor(username, name, surname, email) {
+    constructor(username, name, surname, email, password, salt) {
         this.username = username;
         this.firstname = name;
         this.lastname = surname;
         this.email = email;
-
-
+        this.password = password
+        this.salt = salt
     }
 
     /*GETTER AND SETTER*/
@@ -56,6 +58,22 @@ export class User {
         this.email = email;
     }
 
+    get password() {
+        return this.password
+    }
+
+    set password(password) {
+        this.password = password
+    }
+
+    get salt() {
+        return this.salt
+    }
+
+    set salt(salt) {
+        this.salt = salt
+    }
+
     /* METHODS*/
 
     //READ METHOD BY USERNAME --> RETURN COMPLETE USER OBJ
@@ -69,6 +87,25 @@ export class User {
             return null;
         return newUser;
 
+    }
+    static async getCompleteUser(username) {
+        let result
+        let newUser
+        result = await database.request('SELECT * FROM `user` WHERE `username`=?', username);
+        if(result.length)
+            newUser = new User(result[0].username, result[0].firstname, result[0].lastname, result[0].email, result[0].password, result[0].salt)
+        else
+            return null;
+        return newUser;
+    }
+    //RETURNS THE USERNAME OF THE CURRENT USER. IF THE PASSWORD IS NOT VALID, RETURNS NULL
+    static async verifyAndGetUser(username, password) {
+        let currentUser
+        let result
+        currentUser = await database.request('SELECT * FROM `user` WHERE `username`=? AND `password`=?', username, password)
+        if(!currentUser.length) return null
+        result = currentUser.username
+        return result
     }
 
     //READ ALL METHOD --> RETURN ALL OBJS IN THE DB

@@ -11,10 +11,10 @@ class WebToken {
         this.privateKey = fs.readFileSync('./services/keys/private.key', 'utf8')
         this.publicKey = fs.readFileSync('./services/keys/public.key', 'utf8')
     }
-    generate(user){
+    generate(username){
         //PAYLOAD
         let data = {
-            username: user,
+            username: username,
         }
         //OPTIONS
         let options = {

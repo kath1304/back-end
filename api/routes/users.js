@@ -60,9 +60,8 @@ router.delete('/:username', async (req, res, next) => {
 
 // USER POST ROUTER
 router.post('/', async (req, res, next) => {
-    const requiredFieldsUser = ['username', 'firstname', 'lastname', 'email']
+    const requiredFieldsUser = ['username', 'firstname', 'lastname', 'email', 'password']
     const missingFieldsUser = []
-    const user = new User(req.body.username, req.body.firstname, req.body.lastname, req.body.email);
 
     /*if there's a field not defined put it in the missingFields array*/
     requiredFieldsUser.forEach((field) => {
@@ -76,6 +75,8 @@ router.post('/', async (req, res, next) => {
         error.status = 409
         return next(error)
     }
+    //qui inserire funzione che fa hash di password e salt
+    const user = new User(req.body.username, req.body.firstname, req.body.lastname, req.body.email, //password hashata, salt);
     try {
         await user.save()
     } catch (e) {
@@ -88,20 +89,30 @@ router.post('/', async (req, res, next) => {
 router.put('/:user', async (req, res, next) => {
 
     //At first search the element to be replaced, if there's not -->error
-    const oldUser = await User.getByUsername(req.params.user);
+    const oldUser = await User.getCompleteUser(req.params.user);
     if (oldUser === null) {
         const error = new Error('Resource not found')
         error.status = 404
         return next(error)
     }
     //if in the new obj there's undefined fields, these will be equal to old ones
-    const fieldsToUpdateUser = ['username', 'firstname', 'lastname', 'email']
+    const fieldsToUpdateUser = ['username', 'firstname', 'lastname', 'email', 'password', 'salt']
     fieldsToUpdateUser.forEach((field) => {
         if (req.body[field] === undefined)
             req.body[field] = oldUser[field]
     })
+    //if che controlla se c'è o meno la password nel body
+    //DA METTERE SOPRA
+    /*
+    let user
+    if(req.body.password) {
+        //hash di password con nuovo salt
+        req.body.password = passwordHash
+        req.body.salt = saltGenerato
+    }
+     */
     let user;
-    user = new User(req.body.username, req.body.firstname, req.body.lastname, req.body.email);
+    user = new User(req.body.username, req.body.firstname, req.body.lastname, req.body.email, req.body.password, req.body.salt);
     try {
         await user.upDateByUserName(req.params.user)
     } catch (e) {
