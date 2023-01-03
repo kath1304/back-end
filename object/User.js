@@ -1,4 +1,6 @@
 import {database} from "../services/Database.js";
+import {EncrypterDecrypter} from "../services/EncrypterDecrypter.js";
+import crypto from "crypto";
 
 export class User {
     username;
@@ -82,30 +84,22 @@ export class User {
         let newUser
         result = await database.request('SELECT * FROM `user` WHERE `username`=?', username);
         if(result.length)
-            newUser = new User(result[0].username, result[0].firstname, result[0].lastname, result[0].email)
+            newUser = new User(result[0].username, await EncrypterDecrypter.decrypt(result[0].firstname), await EncrypterDecrypter.decrypt(result[0].lastname), await EncrypterDecrypter.decrypt(result[0].email))
         else
             return null;
         return newUser;
 
     }
     static async getCompleteUser(username) {
-        let result
         let newUser
-        result = await database.request('SELECT * FROM `user` WHERE `username`=?', username);
+
+        let result = await database.request('SELECT * FROM `user` WHERE `username`=?', username);
         if(result.length)
-            newUser = new User(result[0].username, result[0].firstname, result[0].lastname, result[0].email, result[0].password, result[0].salt)
+            newUser = new User(result[0].username, await EncrypterDecrypter.decrypt(result[0].firstname), await EncrypterDecrypter.decrypt(result[0].lastname), await EncrypterDecrypter.decrypt(result[0].email), result[0].password, result[0].salt)
         else
             return null;
+
         return newUser;
-    }
-    //RETURNS THE USERNAME OF THE CURRENT USER. IF THE PASSWORD IS NOT VALID, RETURNS NULL
-    static async verifyAndGetUser(username, password) {
-        let currentUser
-        let result
-        currentUser = await database.request('SELECT * FROM `user` WHERE `username`=? AND `password`=?', username, password)
-        if(!currentUser.length) return null
-        result = currentUser.username
-        return result
     }
 
     //READ ALL METHOD --> RETURN ALL OBJS IN THE DB
@@ -115,7 +109,7 @@ export class User {
         result = await database.request('SELECT * FROM user')
 
         for (let i = 0; i < result.length; i++) {
-            arrayResult.push(new User(result[i].username, result[i].firstname, result[i].lastname, result[i].email))
+            arrayResult.push(new User(result[i].username, await EncrypterDecrypter.decrypt(result[i].firstname), await EncrypterDecrypter.decrypt(result[i].lastname), await EncrypterDecrypter.decrypt(result[i].email)))
         }
 
         return arrayResult;
@@ -123,10 +117,8 @@ export class User {
 
     //SAVE METHOD  --> PUT THE NEW USER INTO THE DB AND RETURN SET_HEADER
     async save() {
-        let result
-        result = await database.request('INSERT INTO user SET ?', this);
-
-        return result;
+        return await database.request('INSERT INTO user VALUES (?, ?, NULL, ?, ?)',
+            this.username, await EncrypterDecrypter.encryptMultipleFields(this.firstname, this.lastname, this.email), this.password, this.salt)
     }
 
     //DELETE METHOD BY USERNAME --> RETURN SET_HEADER
@@ -147,14 +139,22 @@ export class User {
 
     //UPDATE METHOD BY USER --> UPLOAD THE REFRESH USER INTO THE DB AND RETURN THE UPLOADED USER OBJ
     async upDateByUserName(oldUsername) {
-        let result
-        result = await database.request('UPDATE user SET ? WHERE `username`= ?', this, oldUsername);
-
-        return result;
+        return await database.request('UPDATE user SET username = ?, firstname = ?, lastname = ?, email = ?, role_name = NULL, `password` = ? , salt = ? WHERE username = ?',
+            this.username, await EncrypterDecrypter.encrypt(this.firstname), await EncrypterDecrypter.encrypt(this.lastname), await EncrypterDecrypter.encrypt(this.email), this.password, this.salt, oldUsername)
     }
 
+    static async verifyUser(bodyPassword, password, salt) {
+        return password === crypto.createHash('sha256').update(bodyPassword + salt).digest('hex')
+    }
 
+    static async hashPassword(password) {
+        const salt = crypto.randomBytes(16).toString('base64').slice(0, 16)
+
+        const hashed = crypto.createHash('sha256').update(password + salt).digest('hex')
+
+        return {
+            hashedPassword : hashed,
+            salt: salt
+        }
+    }
 }
-
-
-
