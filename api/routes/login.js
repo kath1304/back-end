@@ -5,7 +5,7 @@ import {WebToken} from '../../services/WebToken.js'
 const login = express.Router()
 let webToken = new WebToken()
 
-login.get('/auth', async (req, res, next) => {
+login.post('/auth', async (req, res, next) => {
     let user = await User.getByUsername(req.body.username)
     if(!user) {
         let error = new Error(`username ${req.body.username} not valid`)

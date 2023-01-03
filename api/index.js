@@ -27,7 +27,7 @@ class index {
     port
     constructor() {
         this.app = express()
-        this.port = 3000
+        this.port = 3001
     }
 
     async init() {
