@@ -6,7 +6,7 @@ const login = express.Router()
 let webToken = new WebToken()
 
 login.post('/auth', async (req, res, next) => {
-    let user = await User.getByUsername(req.body.username)
+    let user = await User.getCompleteUser(req.body.username)
     if(!user) {
         let error = new Error(`username ${req.body.username} not valid`)
         error.status = 403
@@ -18,7 +18,7 @@ login.post('/auth', async (req, res, next) => {
         error.status = 403
         return next(error)
     }
-    let newToken = webToken.generate(user.username)
+    let newToken = webToken.generate(user.username, user.role)
     return res.json(newToken)
 })
 

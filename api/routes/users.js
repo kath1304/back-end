@@ -76,7 +76,7 @@ router.post('/', async (req, res, next) => {
         return next(error)
     }
     let values = User.hashPassword(req.body.password)
-    const user = new User(req.body.username, req.body.firstname, req.body.lastname, req.body.email, values.hashedPassword, values.salt);
+    const user = new User(req.body.username, req.body.firstname, req.body.lastname, req.body.email, req.body.role_name, values.hashedPassword, values.salt);
     try {
         await user.save()
     } catch (e) {
@@ -96,18 +96,18 @@ router.put('/:user', async (req, res, next) => {
         return next(error)
     }
     if(req.body.password) {
-        let values = Users.hashPassword(req.body.password)
+        let values = User.hashPassword(req.body.password)
         req.body.password = values.hashedPassword
         req.body.salt = values.salt
     }
     //if in the new obj there's undefined fields, these will be equal to old ones
-    const fieldsToUpdateUser = ['username', 'firstname', 'lastname', 'email', 'password', 'salt']
+    const fieldsToUpdateUser = ['username', 'firstname', 'lastname', 'email', 'role_name', 'password', 'salt']
     fieldsToUpdateUser.forEach((field) => {
         if (req.body[field] === undefined)
             req.body[field] = oldUser[field]
     })
     let user;
-    user = new User(req.body.username, req.body.firstname, req.body.lastname, req.body.email, req.body.password, req.body.salt);
+    user = new User(req.body.username, req.body.firstname, req.body.lastname, req.body.email, req.body.role_name, req.body.password, req.body.salt);
     try {
         await user.upDateByUserName(req.params.user)
     } catch (e) {

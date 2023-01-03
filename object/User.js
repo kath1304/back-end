@@ -9,13 +9,15 @@ export class User {
     email;
     password;
     salt;
+    role_name;
 
 
-    constructor(username, name, surname, email, password, salt) {
+    constructor(username, name, surname, email, role, password, salt) {
         this.username = username;
         this.firstname = name;
         this.lastname = surname;
         this.email = email;
+        this.role_name = role;
         this.password = password
         this.salt = salt
     }
@@ -59,6 +61,12 @@ export class User {
     set email(email) {
         this.email = email;
     }
+    get role_name(){
+        return this.role_name;
+    }
+    set role_name(role){
+        this.role_name = role;
+    }
 
     get password() {
         return this.password
@@ -84,7 +92,7 @@ export class User {
         let newUser
         result = await database.request('SELECT * FROM `user` WHERE `username`=?', username);
         if(result.length)
-            newUser = new User(result[0].username, await EncrypterDecrypter.decrypt(result[0].firstname), await EncrypterDecrypter.decrypt(result[0].lastname), await EncrypterDecrypter.decrypt(result[0].email))
+            newUser = new User(result[0].username, await EncrypterDecrypter.decrypt(result[0].firstname), await EncrypterDecrypter.decrypt(result[0].lastname), await EncrypterDecrypter.decrypt(result[0].email), await EncrypterDecrypter.decrypt(result[0].role_name))
         else
             return null;
         return newUser;
@@ -95,7 +103,7 @@ export class User {
 
         let result = await database.request('SELECT * FROM `user` WHERE `username`=?', username);
         if(result.length)
-            newUser = new User(result[0].username, await EncrypterDecrypter.decrypt(result[0].firstname), await EncrypterDecrypter.decrypt(result[0].lastname), await EncrypterDecrypter.decrypt(result[0].email), result[0].password, result[0].salt)
+            newUser = new User(result[0].username, await EncrypterDecrypter.decrypt(result[0].firstname), await EncrypterDecrypter.decrypt(result[0].lastname), await EncrypterDecrypter.decrypt(result[0].email), await EncrypterDecrypter.decrypt(result[0].role_name), result[0].password, result[0].salt)
         else
             return null;
 
@@ -109,7 +117,7 @@ export class User {
         result = await database.request('SELECT * FROM user')
 
         for (let i = 0; i < result.length; i++) {
-            arrayResult.push(new User(result[i].username, await EncrypterDecrypter.decrypt(result[i].firstname), await EncrypterDecrypter.decrypt(result[i].lastname), await EncrypterDecrypter.decrypt(result[i].email)))
+            arrayResult.push(new User(result[i].username, await EncrypterDecrypter.decrypt(result[i].firstname), await EncrypterDecrypter.decrypt(result[i].lastname), await EncrypterDecrypter.decrypt(result[i].email), await EncrypterDecrypter.decrypt(result[i].role_name)))
         }
 
         return arrayResult;
@@ -117,8 +125,8 @@ export class User {
 
     //SAVE METHOD  --> PUT THE NEW USER INTO THE DB AND RETURN SET_HEADER
     async save() {
-        return await database.request('INSERT INTO user VALUES (?, ?, NULL, ?, ?)',
-            this.username, await EncrypterDecrypter.encryptMultipleFields(this.firstname, this.lastname, this.email), this.password, this.salt)
+        return await database.request('INSERT INTO user VALUES (?, ?, ?, ?)',
+            this.username, await EncrypterDecrypter.encryptMultipleFields(this.firstname, this.lastname, this.email, this.role_name), this.password, this.salt)
     }
 
     //DELETE METHOD BY USERNAME --> RETURN SET_HEADER
@@ -139,8 +147,8 @@ export class User {
 
     //UPDATE METHOD BY USER --> UPLOAD THE REFRESH USER INTO THE DB AND RETURN THE UPLOADED USER OBJ
     async upDateByUserName(oldUsername) {
-        return await database.request('UPDATE user SET username = ?, firstname = ?, lastname = ?, email = ?, role_name = NULL, `password` = ? , salt = ? WHERE username = ?',
-            this.username, await EncrypterDecrypter.encrypt(this.firstname), await EncrypterDecrypter.encrypt(this.lastname), await EncrypterDecrypter.encrypt(this.email), this.password, this.salt, oldUsername)
+        return await database.request('UPDATE user SET username = ?, firstname = ?, lastname = ?, email = ?, role_name = ?, `password` = ? , salt = ? WHERE username = ?',
+            this.username, await EncrypterDecrypter.encrypt(this.firstname), await EncrypterDecrypter.encrypt(this.lastname), await EncrypterDecrypter.encrypt(this.email), await EncrypterDecrypter.encrypt(this.role_name), this.password, this.salt, oldUsername)
     }
 
     static async verifyUser(bodyPassword, password, salt) {

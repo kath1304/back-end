@@ -8,7 +8,7 @@ renewToken.get('/newToken', (req, res, next) => {
     let token = req.headers["authorization"].split(" ")[1]
     let data = webToken.validate(token)
     if(data) {
-        let newToken = webToken.generate(data.username)
+        let newToken = webToken.generate(data.username, data.role)
         return res.json(newToken)
     }
     const error = new Error("Token not valid")
