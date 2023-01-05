@@ -92,7 +92,7 @@ export class User {
         let newUser
         result = await database.request('SELECT * FROM `user` WHERE `username`=?', username);
         if(result.length)
-            newUser = new User(result[0].username, await EncrypterDecrypter.decrypt(result[0].firstname), await EncrypterDecrypter.decrypt(result[0].lastname), await EncrypterDecrypter.decrypt(result[0].email), await EncrypterDecrypter.decrypt(result[0].role_name))
+            newUser = new User(result[0].username, await EncrypterDecrypter.decrypt(result[0].firstname), await EncrypterDecrypter.decrypt(result[0].lastname), await EncrypterDecrypter.decrypt(result[0].email), result[0].role_name)
         else
             return null;
         return newUser;
@@ -103,7 +103,7 @@ export class User {
 
         let result = await database.request('SELECT * FROM `user` WHERE `username`=?', username);
         if(result.length)
-            newUser = new User(result[0].username, await EncrypterDecrypter.decrypt(result[0].firstname), await EncrypterDecrypter.decrypt(result[0].lastname), await EncrypterDecrypter.decrypt(result[0].email), await EncrypterDecrypter.decrypt(result[0].role_name), result[0].password, result[0].salt)
+            newUser = new User(result[0].username, await EncrypterDecrypter.decrypt(result[0].firstname), await EncrypterDecrypter.decrypt(result[0].lastname), await EncrypterDecrypter.decrypt(result[0].email), result[0].role_name, result[0].password, result[0].salt)
         else
             return null;
 
@@ -125,8 +125,8 @@ export class User {
 
     //SAVE METHOD  --> PUT THE NEW USER INTO THE DB AND RETURN SET_HEADER
     async save() {
-        return await database.request('INSERT INTO user VALUES (?, ?, ?, ?)',
-            this.username, await EncrypterDecrypter.encryptMultipleFields(this.firstname, this.lastname, this.email, this.role_name), this.password, this.salt)
+        return await database.request('INSERT INTO user VALUES (?, ?, ?, ?, ?)',
+            this.username, await EncrypterDecrypter.encryptMultipleFields(this.firstname, this.lastname, this.email), this.role_name, this.password, this.salt)
     }
 
     //DELETE METHOD BY USERNAME --> RETURN SET_HEADER
@@ -148,7 +148,7 @@ export class User {
     //UPDATE METHOD BY USER --> UPLOAD THE REFRESH USER INTO THE DB AND RETURN THE UPLOADED USER OBJ
     async upDateByUserName(oldUsername) {
         return await database.request('UPDATE user SET username = ?, firstname = ?, lastname = ?, email = ?, role_name = ?, `password` = ? , salt = ? WHERE username = ?',
-            this.username, await EncrypterDecrypter.encrypt(this.firstname), await EncrypterDecrypter.encrypt(this.lastname), await EncrypterDecrypter.encrypt(this.email), await EncrypterDecrypter.encrypt(this.role_name), this.password, this.salt, oldUsername)
+            this.username, await EncrypterDecrypter.encrypt(this.firstname), await EncrypterDecrypter.encrypt(this.lastname), await EncrypterDecrypter.encrypt(this.email), this.role_name, this.password, this.salt, oldUsername)
     }
 
     static async verifyUser(bodyPassword, password, salt) {

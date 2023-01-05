@@ -18,8 +18,11 @@ login.post('/auth', async (req, res, next) => {
         error.status = 403
         return next(error)
     }
-    let newToken = webToken.generate(user.username, user.role)
-    return res.json(newToken)
+    let newToken = webToken.generate(user.username, user.role_name)
+    return res.json({
+        token: newToken,
+        role: user.role_name
+    })
 })
 
 export default login
