@@ -1,6 +1,7 @@
 import express from 'express'
 import {User} from '../../object/User.js'
 import {WebToken} from '../../services/WebToken.js'
+import {LoggedSession} from "../../object/LoggedSession.js"
 
 const login = express.Router()
 let webToken = new WebToken()
@@ -19,6 +20,8 @@ login.post('/auth', async (req, res, next) => {
         return next(error)
     }
     let newToken = webToken.generate(user.username, user.role_name)
+    let session = new LoggedSession(req.ip, user.username, new Date())
+    await session.save()
     return res.json({
         token: newToken,
         role: user.role_name
