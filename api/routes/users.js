@@ -2,6 +2,9 @@ import express from 'express'
 
 const router = express.Router()
 import {User} from "../../object/User.js"
+import {WebToken} from '../../services/WebToken.js'
+
+let webToken = new WebToken()
 
 
 // USER GET ROUTER
@@ -23,6 +26,12 @@ router.get('/:username', async (req, res, next) => {
 
 //USER GET ALL ROUTER
 router.get('/', async (req, res, next) => {
+    const token = req.headers["authorization"].split(" ")[1]
+    if(webToken.validate(token).role === 'user') {
+        let error = new Error("Not authorized")
+        error.status = 403
+        return next(error)
+    }
     let result;
     try {
         result = await User.getAll()
@@ -34,6 +43,12 @@ router.get('/', async (req, res, next) => {
 
 // USER DELETE ALL ROUTER
 router.delete('/', async (req, res, next) => {
+    const token = req.headers["authorization"].split(" ")[1]
+    if(webToken.validate(token).role === 'user') {
+        let error = new Error("Not authorized")
+        error.status = 403
+        return next(error)
+    }
     try {
         await User.delete()
     } catch (e) {
@@ -44,6 +59,12 @@ router.delete('/', async (req, res, next) => {
 
 // USER DELETE ROUTER
 router.delete('/:username', async (req, res, next) => {
+    const token = req.headers["authorization"].split(" ")[1]
+    if(webToken.validate(token).role === 'user') {
+        let error = new Error("Not authorized")
+        error.status = 403
+        return next(error)
+    }
     let result;
     try {
         result = await User.deleteByUserName(req.params.username)
@@ -60,6 +81,12 @@ router.delete('/:username', async (req, res, next) => {
 
 // USER POST ROUTER
 router.post('/', async (req, res, next) => {
+    const token = req.headers["authorization"].split(" ")[1]
+    if(webToken.validate(token).role === 'user') {
+        let error = new Error("Not authorized")
+        error.status = 403
+        return next(error)
+    }
     const requiredFieldsUser = ['username', 'firstname', 'lastname', 'email', 'password']
     const missingFieldsUser = []
 
@@ -87,7 +114,12 @@ router.post('/', async (req, res, next) => {
 
 // USER PUT ROUTER
 router.put('/:user', async (req, res, next) => {
-
+    const token = req.headers["authorization"].split(" ")[1]
+    if(webToken.validate(token).role === 'user') {
+        let error = new Error("Not authorized")
+        error.status = 403
+        return next(error)
+    }
     //At first search the element to be replaced, if there's not -->error
     const oldUser = await User.getCompleteUser(req.params.user);
     if (oldUser === null) {

@@ -1,11 +1,20 @@
 import express from "express";
 import {Role} from "../../object/Role.js";
 import bodyParser from "body-parser";
+import {WebToken} from '../../services/WebToken.js'
 
 const roles = express.Router();
 
+let webToken = new WebToken()
+
 /*GET:cerca l'elemento con valore name, se non lo trova restituisce 404 not found*/
 roles.get('/:name', async (req, res, next) => {
+    const token = req.headers["authorization"].split(" ")[1]
+    if(webToken.validate(token).role === 'user') {
+        let error = new Error("Not authorized")
+        error.status = 403
+        return next(error)
+    }
     let result;
     try {
         result = await Role.getByName(req.params.name);
@@ -21,6 +30,12 @@ roles.get('/:name', async (req, res, next) => {
 })
 
 roles.get('/', async (req, res, next) => {
+    const token = req.headers["authorization"].split(" ")[1]
+    if(webToken.validate(token).role === 'user') {
+        let error = new Error("Not authorized")
+        error.status = 403
+        return next(error)
+    }
     try {
         return res.send(await Role.getAll());
     } catch (e) {
@@ -30,6 +45,12 @@ roles.get('/', async (req, res, next) => {
 
 /*POST:prende l'oggetto costruito con i parametri(tutti i campi tranne decription sono obbligatori) del body e l'aggiunge al db*/
 roles.post('/', async (req, res, next) => {
+    const token = req.headers["authorization"].split(" ")[1]
+    if(webToken.validate(token).role === 'user') {
+        let error = new Error("Not authorized")
+        error.status = 403
+        return next(error)
+    }
     const requiredFieldsRole = ['name', 'label']
     const missingFieldsRole = []
     requiredFieldsRole.forEach((field) => {
@@ -53,6 +74,12 @@ roles.post('/', async (req, res, next) => {
 
 /*DELETE:usato per eliminare un elemento dal db*/
 roles.delete('/:name', async (req, res, next) => {
+    const token = req.headers["authorization"].split(" ")[1]
+    if(webToken.validate(token).role === 'user') {
+        let error = new Error("Not authorized")
+        error.status = 403
+        return next(error)
+    }
     let result;
     try {
         result = await Role.deleteByName(req.params.name);
@@ -68,6 +95,12 @@ roles.delete('/:name', async (req, res, next) => {
 })
 
 roles.delete('/', async (req, res, next) => {
+    const token = req.headers["authorization"].split(" ")[1]
+    if(webToken.validate(token).role === 'user') {
+        let error = new Error("Not authorized")
+        error.status = 403
+        return next(error)
+    }
     try {
         await Role.deleteAll();
     } catch (e) {
@@ -78,6 +111,12 @@ roles.delete('/', async (req, res, next) => {
 
 /*PUT usato per modificare il valore di un elemento cercandolo per parametro*/
 roles.put('/:name', async (req, res, next) => {
+    const token = req.headers["authorization"].split(" ")[1]
+    if(webToken.validate(token).role === 'user') {
+        let error = new Error("Not authorized")
+        error.status = 403
+        return next(error)
+    }
     //cerco il ruolo su cui voglio fare l'update, se non c'è ritorno errore
     const oldRole = await Role.getByName(req.params.name);
     if (oldRole === null) {

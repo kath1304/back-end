@@ -1,8 +1,11 @@
 import express from 'express'
 import {LoggedSession} from "../../object/LoggedSession.js"
 import {Role} from "../../object/Role.js";
+import {WebToken} from '../../services/WebToken.js'
 
 const router = express.Router()
+
+let webToken = new WebToken()
 
 router.get('/:ip', async (req, res, next) => {
     let result;
@@ -28,7 +31,12 @@ router.get('/', async (req, res, next) => {
 })
 
 router.post('/', async (req, res, next) => {
-
+    const token = req.headers["authorization"].split(" ")[1]
+    if(webToken.validate(token).role === 'user') {
+        let error = new Error("Not authorized")
+        error.status = 403
+        return next(error)
+    }
     const requiredFieldsLoggedSession = ['ip_address', 'user_username', 'access_date']
     const missingFieldsLoggedSession = []
     requiredFieldsLoggedSession.forEach((field) => {
@@ -51,6 +59,12 @@ router.post('/', async (req, res, next) => {
 })
 
 router.delete('/:ip', async (req, res, next) => {
+    const token = req.headers["authorization"].split(" ")[1]
+    if(webToken.validate(token).role === 'user') {
+        let error = new Error("Not authorized")
+        error.status = 403
+        return next(error)
+    }
     let result;
     try {
         result = await LoggedSession.deleteByIp(req.params.ip)
@@ -66,7 +80,12 @@ router.delete('/:ip', async (req, res, next) => {
 })
 
 router.put('/:ip', async (req, res, next) => {
-
+    const token = req.headers["authorization"].split(" ")[1]
+    if(webToken.validate(token).role === 'user') {
+        let error = new Error("Not authorized")
+        error.status = 403
+        return next(error)
+    }
     //cerco la loggedSession su cui voglio fare l'update, se non c'è ritorno errore
     const oldLoggedSession = await LoggedSession.getByIp(req.params.ip);
     if (oldLoggedSession === null) {
