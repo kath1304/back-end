@@ -117,7 +117,7 @@ export class User {
         result = await database.request('SELECT * FROM user')
 
         for (let i = 0; i < result.length; i++) {
-            arrayResult.push(new User(result[i].username, await EncrypterDecrypter.decrypt(result[i].firstname), await EncrypterDecrypter.decrypt(result[i].lastname), await EncrypterDecrypter.decrypt(result[i].email), await EncrypterDecrypter.decrypt(result[i].role_name)))
+            arrayResult.push(new User(result[i].username, await EncrypterDecrypter.decrypt(result[i].firstname), await EncrypterDecrypter.decrypt(result[i].lastname), await EncrypterDecrypter.decrypt(result[i].email), result[i].role_name))
         }
 
         return arrayResult;
@@ -125,7 +125,7 @@ export class User {
 
     //SAVE METHOD  --> PUT THE NEW USER INTO THE DB AND RETURN SET_HEADER
     async save() {
-        return await database.request('INSERT INTO user VALUES (?, ?, ?, ?, ?)',
+        return await database.request('INSERT INTO user VALUES  (?, ?, ?, ?, ?)',
             this.username, await EncrypterDecrypter.encryptMultipleFields(this.firstname, this.lastname, this.email), this.role_name, this.password, this.salt)
     }
 

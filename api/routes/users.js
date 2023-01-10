@@ -102,7 +102,7 @@ router.post('/', async (req, res, next) => {
         error.status = 409
         return next(error)
     }
-    let values = User.hashPassword(req.body.password)
+    let values = await User.hashPassword(req.body.password)
     const user = new User(req.body.username, req.body.firstname, req.body.lastname, req.body.email, req.body.role_name, values.hashedPassword, values.salt);
     try {
         await user.save()
