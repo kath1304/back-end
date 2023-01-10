@@ -41,8 +41,16 @@ class index {
             console.log('Server in ascolto su ' + this.port)
         })
 
-        this.app.get('/', (req, res) => {
-            res.send('Index home page')
+        this.app.get('/validate', (req, res) => {
+            if(!req.headers["authorization"]) return res.send(false)
+            const token = req.headers["authorization"].split(" ")[1]
+            if(token){
+                const newToken = new WebToken()
+                if(newToken.validate(token)) {
+                    return res.send(true)
+                }
+            }
+            return res.send(false)
         })
 
         this.app.use('/login', login)
