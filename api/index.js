@@ -22,6 +22,10 @@ const authorize = (req, res, next) => {
         res.sendStatus(401)
     }
 }
+const logger = (req, res, next) => {
+    console.log(req.method + ' ' + req.path)
+    next()
+}
 
 class index {
     app
@@ -53,6 +57,7 @@ class index {
             return res.send(false)
         })
 
+        this.app.use(logger)
         this.app.use('/login', login)
         this.app.use(authorize)
         this.app.use('/users', users)
