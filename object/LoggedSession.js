@@ -90,7 +90,7 @@ export class LoggedSession {
 
     static async deleteByUsername(username) {
         let result
-        result = await database.request('DELETE FROM logged_session WHERE username = ?', username)
+        result = await database.request('DELETE FROM logged_session WHERE user_username = ?', username)
         console.log(result)
         return result
     }

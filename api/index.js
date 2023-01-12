@@ -8,6 +8,7 @@ import {WebToken} from "../services/WebToken.js"
 import renewToken from "./routes/renewToken.js"
 import login from "./routes/login.js"
 import cors from 'cors'
+import logout from "./routes/logout.js";
 
 const authorize = (req, res, next) => {
     const token = req.headers["authorization"].split(" ")[1]
@@ -23,7 +24,7 @@ const authorize = (req, res, next) => {
     }
 }
 const logger = (req, res, next) => {
-    console.log(req.method + ' ' + req.path)
+    console.log(new Date() + ' ' + req.method + ' ' + req.path)
     next()
 }
 
@@ -64,6 +65,7 @@ class index {
         this.app.use('/loggedSessions', loggedSessions)
         this.app.use('/roles', roles)
         this.app.use('/renewToken', renewToken)
+        this.app.use('/logout', logout)
     }
 }
 
