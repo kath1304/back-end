@@ -24,7 +24,8 @@ login.post('/auth', async (req, res, next) => {
     await session.save()
     return res.json({
         token: newToken,
-        role: user.role_name
+        role: user.role_name,
+        username: user.username,
     })
 })
 

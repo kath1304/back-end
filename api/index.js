@@ -49,11 +49,9 @@ class index {
         this.app.get('/validate', (req, res) => {
             if(!req.headers["authorization"]) return res.send(false)
             const token = req.headers["authorization"].split(" ")[1]
-            if(token){
-                const newToken = new WebToken()
-                if(newToken.validate(token)) {
-                    return res.send(true)
-                }
+            const newToken = new WebToken()
+            if(newToken.validate(token)) {
+                return res.send(true)
             }
             return res.send(false)
         })
