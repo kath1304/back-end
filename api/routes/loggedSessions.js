@@ -1,6 +1,5 @@
 import express from 'express'
 import {LoggedSession} from "../../object/LoggedSession.js"
-import {Role} from "../../object/Role.js";
 import {WebToken} from '../../services/WebToken.js'
 
 const router = express.Router()
@@ -51,11 +50,10 @@ router.post('/', async (req, res, next) => {
     try {
         let result = new LoggedSession(req.body.ip, req.body.username, req.body.date)
         await result.save();
-        console.log('i dati sono stati caricati sul server')
     } catch (e) {
         return next(e)
     }
-    res.send('dati ricevuti correttamente e caricati')
+    res.send()
 })
 
 router.delete('/:ip', async (req, res, next) => {
@@ -76,7 +74,7 @@ router.delete('/:ip', async (req, res, next) => {
         error.status = 404
         return next(error)
     }
-    return res.send("deleted element with ip" + req.params.ip);
+    return res.send();
 })
 
 router.put('/:ip', async (req, res, next) => {
@@ -107,7 +105,7 @@ router.put('/:ip', async (req, res, next) => {
     } catch (e) {
         return next(e)
     }
-    return res.send('aggiornato elemento con ip ' + newLoggedSession.ipAddress)
+    return res.send()
 })
 
 export default router

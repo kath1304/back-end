@@ -65,7 +65,6 @@ roles.post('/', async (req, res, next) => {
     try {
         let result = new Role(req.body.name, req.body.description, req.body.label);
         await result.save();
-        console.log('i dati sono stati caricati sul server')
     } catch (e) {
         return next(e)
     }

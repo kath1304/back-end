@@ -11,17 +11,13 @@ import cors from 'cors'
 import logout from "./routes/logout.js";
 
 const authorize = (req, res, next) => {
+    if(!req.headers["authorization"]) return res.sendStatus(401)
     const token = req.headers["authorization"].split(" ")[1]
-    if(token) {
-        const newToken = new WebToken()
-        if(newToken.validate(token)) {
-            next()
-        }
-        else res.sendStatus(403)
+    const newToken = new WebToken()
+    if(newToken.validate(token)) {
+        next()
     }
-    else {
-        res.sendStatus(401)
-    }
+    else res.sendStatus(403)
 }
 const logger = (req, res, next) => {
     console.log(new Date() + ' ' + req.method + ' ' + req.path)
@@ -45,6 +41,7 @@ class index {
         this.app.listen(this.port, () => {
             console.log('Server in ascolto su ' + this.port)
         })
+        this.app.use(logger)
 
         this.app.get('/validate', (req, res) => {
             if(!req.headers["authorization"]) return res.send(false)
@@ -55,8 +52,6 @@ class index {
             }
             return res.send(false)
         })
-
-        this.app.use(logger)
         this.app.use('/login', login)
         this.app.use(authorize)
         this.app.use('/users', users)

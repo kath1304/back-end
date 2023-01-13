@@ -53,32 +53,27 @@ export class Role {
         for (let i = 0; i < result.length; i++) {
             arrayResult.push(new Role(result[i].name, result[i].description, result[i].label));
         }
-        console.log(result)
         return arrayResult;
     }
 
     async save() {
         let result;
         result = await database.request('INSERT INTO role SET ?', this);
-        console.log(result)
         return result
     }
 
     static async deleteByName(name) {
         let result;
         result = await database.request('DELETE FROM role WHERE `name`=? ', name);
-        console.log(result)
         return result
     }
 
     static async deleteAll() {
         let result;
         result = await database.request('DELETE FROM role');
-        console.log(result)
         return result
     }
 
-    /*aggiungere proprieta cascade*/
     async updateByName(oldName) {
         let result;
         try {
@@ -86,10 +81,7 @@ export class Role {
         } catch (e) {
             console.error(e);
         }
-        console.log(result)
         return result
     }
-
-
 }
 

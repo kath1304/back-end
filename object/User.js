@@ -133,7 +133,6 @@ export class User {
     static async deleteByUserName(username) {
         let result
         result = await database.request('DELETE FROM user WHERE `username`=?', username);
-
         return result;
     }
 
@@ -141,7 +140,6 @@ export class User {
     static async delete() {
         let result
         result = await database.request('DELETE FROM user');
-
         return result;
     }
 
