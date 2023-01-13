@@ -128,7 +128,7 @@ router.put('/:user', async (req, res, next) => {
         return next(error)
     }
     if(req.body.password) {
-        let values = User.hashPassword(req.body.password)
+        let values = await User.hashPassword(req.body.password)
         req.body.password = values.hashedPassword
         req.body.salt = values.salt
     }
