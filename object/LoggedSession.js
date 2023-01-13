@@ -69,7 +69,6 @@ export class LoggedSession {
         for (let i = 0; i < result.length; i++) {
             arrayResult.push(new LoggedSession(result[i].ip_address, result[i].user_username, datetimeToString(result[i].access_date)))
         }
-        console.log(result)
         return arrayResult
     }
 
