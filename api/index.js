@@ -21,7 +21,7 @@ const authorize = (req, res, next) => {
     else res.sendStatus(403)
 }
 const logger = (req, res, next) => {
-    console.log(new Date() + ' ' + req.method + ' ' + req.path)
+    console.log(new Date() + ' ' + req.socket.remoteAddress + ' ' + req.method + ' ' + req.path)
     next()
 }
 
