@@ -44,7 +44,7 @@ router.post('/', async (req, res, next) => {
     /*se ci sono dei campi mancanti, restituisci un errore*/
     if (missingFieldsLoggedSession.length) {
         const error = new Error(`The following required fields are undefined: ${missingFieldsLoggedSession.join(', ')}`)
-        error.status = 409
+        error.status = 400
         return next(error)
     }
     try {
