@@ -39,7 +39,7 @@ class index {
         this.app.use(bodyParser.json({limit: '50mb'}))
         this.app.use(cors())
 
-        this.app.listen(this.port, "0.0.0.0", () => {
+        this.app.listen(this.port, () => {
             console.log('Server in ascolto su ' + this.port)
         })
         this.app.use(logger)

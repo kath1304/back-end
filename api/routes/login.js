@@ -20,7 +20,7 @@ login.post('/auth', async (req, res, next) => {
         return next(error)
     }
     let newToken = webToken.generate(user.username, user.role_name)
-    let session = new LoggedSession(req.ip, user.username, new Date())
+    let session = new LoggedSession(req.headers['x-forwarded-for'] || req.socket.remoteAddress, user.username, new Date())
     await session.save()
     return res.json({
         token: newToken,
