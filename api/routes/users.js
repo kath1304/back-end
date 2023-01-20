@@ -87,6 +87,14 @@ router.post('/', async (req, res, next) => {
         error.status = 403
         return next(error)
     }
+
+    //check if user with username given already exists
+    if(await User.getByUsername(req.body.username)) {
+        const error = new Error('Duplicate entry in DB')
+        error.status = 409
+        return next(error)
+    }
+
     const requiredFieldsUser = ['username', 'firstname', 'lastname', 'email', 'password']
     const missingFieldsUser = []
 
@@ -99,7 +107,7 @@ router.post('/', async (req, res, next) => {
     /*if there's some empty fields -> error*/
     if (missingFieldsUser.length) {
         const error = new Error(`The following required fields is/are undefined: ${missingFieldsUser.join(' , ')}`)
-        error.status = 409
+        error.status = 400
         return next(error)
     }
     let values = await User.hashPassword(req.body.password)
@@ -127,6 +135,14 @@ router.put('/:user', async (req, res, next) => {
         error.status = 404
         return next(error)
     }
+
+    //check if user with username given already exists
+    if(await User.getByUsername(req.body.username)) {
+        const error = new Error('Duplicate entry in DB')
+        error.status = 409
+        return next(error)
+    }
+
     if(req.body.password) {
         let values = await User.hashPassword(req.body.password)
         req.body.password = values.hashedPassword

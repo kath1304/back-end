@@ -59,7 +59,7 @@ roles.post('/', async (req, res, next) => {
     /*se ci sono dei campi mancanti, restituisci un errore*/
     if (missingFieldsRole.length) {
         const error = new Error(`The following required fields are undefined: ${missingFieldsRole.join(', ')}`)
-        error.status = 409
+        error.status = 400
         return next(error)
     }
     try {
