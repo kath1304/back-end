@@ -56,9 +56,9 @@ class index {
         })
         this.app.use('/login', login)
         this.app.use(authorize)
-        this.app.use('/api/users', users)
-        this.app.use('/api/loggedSessions', loggedSessions)
-        this.app.use('/api/roles', roles)
+        this.app.use('/users', users)
+        this.app.use('/loggedSessions', loggedSessions)
+        this.app.use('/roles', roles)
         this.app.use('/renewToken', renewToken)
         this.app.use('/logout', logout)
     }
