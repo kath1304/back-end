@@ -137,7 +137,7 @@ router.put('/:user', async (req, res, next) => {
     }
 
     //check if user with username given already exists
-    if(await User.getByUsername(req.body.username) !== oldUser.username) {
+    if(await User.getByUsername(req.body.username).username !== oldUser.username) {
         const error = new Error('Duplicate entry in DB')
         error.status = 409
         return next(error)
