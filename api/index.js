@@ -11,6 +11,8 @@ import cors from 'cors'
 import logout from "./routes/logout.js";
 import {LoggedSession} from "../object/LoggedSession.js";
 
+
+//FUNZIONE CHE VERIFICA LA VALIDITA' DEL TOKEN DI ACCESSO
 const authorize = (req, res, next) => {
     if(!req.headers["authorization"]) return res.sendStatus(401)
     const token = req.headers["authorization"].split(" ")[1]
@@ -20,6 +22,8 @@ const authorize = (req, res, next) => {
     }
     else res.sendStatus(403)
 }
+
+//STAMPA SU CONSOLE DEL BACK-END DI OGNI OPERAZIONE
 const logger = (req, res, next) => {
     console.log(new Date() + ' ' + req.socket.remoteAddress + ' ' + req.method + ' ' + req.path)
     next()
@@ -44,6 +48,7 @@ class index {
         })
         this.app.use(logger)
 
+        //VERIFICA LA VALIDITA' DEL TOKEN RESTITUENDO UN BOOLENANO AL FRONT-END
         this.app.post('/validate', async (req, res) => {
             if(!req.headers["authorization"]) return res.send(false)
             const token = req.headers["authorization"].split(" ")[1]

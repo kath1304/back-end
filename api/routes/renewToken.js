@@ -4,6 +4,8 @@ import express from 'express'
 const renewToken = express.Router()
 let webToken = new WebToken()
 
+//LANCIATO DIRETTAMENTE DAL BROWSER AUTOMATICAMENTE E POI SPEDISCE I DATI AL FRONT-END
+
 renewToken.get('/', (req, res, next) => {
     let token = req.headers["authorization"].split(" ")[1]
     let data = webToken.validate(token)
@@ -11,7 +13,8 @@ renewToken.get('/', (req, res, next) => {
         let newToken = webToken.generate(data.username, data.role)
         return res.json({
             token: newToken,
-            role: data.role
+            role: data.role,
+            username: data.username
         })
     }
     const error = new Error("Token not valid")

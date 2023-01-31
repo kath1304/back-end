@@ -1,6 +1,5 @@
 import express from "express";
 import {Role} from "../../object/Role.js";
-import bodyParser from "body-parser";
 import {WebToken} from '../../services/WebToken.js'
 
 const roles = express.Router();

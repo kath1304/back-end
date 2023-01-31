@@ -22,9 +22,9 @@ login.post('/auth', async (req, res, next) => {
     let newToken = webToken.generate(user.username, user.role_name)
     let ip = (req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
     let session = new LoggedSession(ip, user.username, new Date())
-    await LoggedSession.deleteByIp(ip)
+    await LoggedSession.deleteByIp(ip)  //USATO PER ELIMINARE UN'IPOTETICA LOGGEDSESSION RESTATA IN CACHE
     await session.save()
-    return res.json({
+    return res.json({  //TOKEN CHE DEVE POI ESSERE UTILIZZATO DAL FRONT-END, CHE LEGGERA' I CAMPI APPENA GENERATI
         token: newToken,
         role: user.role_name,
         username: user.username,
