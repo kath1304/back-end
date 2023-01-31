@@ -35,7 +35,7 @@ class WebToken {
             algorithm: ["RS256"],
         }
         try {
-            return this.jwt.verify(token, this.publicKey, verifyOptions)
+            return this.jwt.verify(token, this.publicKey, verifyOptions)  //RESTITUZIONE DEL PACCHETTO DECODIFICATO
         } catch(err) {
             console.error("Invalid token")
             return null
